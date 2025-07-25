@@ -10,6 +10,7 @@ use App\Http\Controllers\PriorityController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -94,6 +95,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/week-view/{project}', [CalendarController::class, 'weekView'])->name('week-view');
         Route::get('/month-view/{project}', [CalendarController::class, 'monthView'])->name('month-view');
     });
+
+    Route::prefix('notifications')->name('notifications.')->group(function() {
+        Route::get('/', [NotificationController::class, 'index'])->name('index');
+        Route::post('/{id}', [NotificationController::class, 'read'])->name('read');
+    });
+
 });
 
 Route::get('/verify-email/{id}/{hash}', VerifyEmailController::class)
