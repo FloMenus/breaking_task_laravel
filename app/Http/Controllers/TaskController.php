@@ -7,6 +7,7 @@ use App\Models\Column;
 use App\Models\Priority;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use App\Notifications\CreateTask;
 
 class TaskController extends Controller
 {
@@ -71,6 +72,10 @@ class TaskController extends Controller
         $task = Task::create(array_merge($validated, [
             'created_by' => auth()->id(),
         ]));
+
+        foreach($task->project->users()->get() as $user){
+            $user->notify(new CreateTask($task));
+        }
 
         return response()->json([
             'message' => 'Tâche ajoutée avec succès',
